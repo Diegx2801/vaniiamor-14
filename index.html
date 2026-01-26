@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Vania ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --pink-light: #ffe4e1;
+            --pink-medium: #ffb7c5;
+            --pink-dark: #ff69b4;
+            --red-love: #d32f2f;
+            --text-dark: #4a4a4a;
+            --paper-color: #fff0f5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--pink-light);
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA 1: EL SOBRE --- */
+        #envelope-screen {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffc1e3 100%);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            transition: transform 1s ease-in-out;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background-color: var(--pink-medium);
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .envelope::before { /* Solapa */
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid var(--pink-dark);
+            transform-origin: top;
+            transition: transform 0.5s;
+            z-index: 5;
+        }
+
+        .card-preview {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 6;
+            transform: translateY(0);
+            transition: transform 0.5s;
+        }
+
+        .heart-seal {
+            font-size: 40px;
+            color: var(--red-love);
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* --- PANTALLA 2: EL CONTENIDO (Periódico) --- */
+        #main-content {
+            max-width: 500px; /* Ancho tipo móvil */
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+            display: none; /* Se oculta al inicio */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: 1px solid #ffc1e3;
+        }
+
+        .header {
+            background-color: var(--pink-light);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--pink-dark);
+        }
+
+        .newspaper-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--red-love);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--text-dark);
+            border-bottom: 1px solid var(--text-dark);
+            padding: 5px 0;
+            margin-top: 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .hero-section {
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .big-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            line-height: 1;
+            color: var(--red-love);
+            margin-bottom: 20px;
+        }
+
+        .script-font {
+            font-family: 'Sacramento', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-dark);
+        }
+
+        .photo-frame {
+            border: 2px solid var(--pink-dark);
+            padding: 10px;
+            margin: 20px 0;
+            transform: rotate(-2deg);
+            background: white;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            display: block;
+            filter: sepia(20%);
+        }
+
+        .article-text {
+            text-align: justify;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        /* --- CUPONES --- */
+        .coupons {
+            padding: 20px;
+            border-top: 2px dashed var(--pink-dark);
+            border-bottom: 2px dashed var(--pink-dark);
+            margin: 20px 0;
+            background: var(--paper-color);
+        }
+
+        .coupon {
+            border: 2px solid var(--red-love);
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .ticket-cut {
+            border-right: 2px dashed var(--red-love);
+            padding-right: 15px;
+            margin-right: 15px;
+            font-weight: bold;
+            color: var(--red-love);
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        /* --- 5 RAZONES (GRID) --- */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+            background: var(--pink-light);
+        }
+
+        .reason-box {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--pink-medium);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+
+        .reason-box.heart-center {
+            background: transparent;
+            border: none;
+            font-size: 3rem;
+            color: var(--red-love);
+            animation: beat 1s infinite;
+        }
+
+        /* --- PREGUNTA FINAL --- */
+        .final-proposal {
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, white, #ffe4e1);
+        }
+
+        .btn {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            border: 2px solid var(--red-love);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background-color: var(--red-love);
+            color: white;
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--red-love);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ANIMACIONES */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .open-anim {
+            transform: translateY(-100vh) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="envelope-screen" onclick="openEnvelope()">
+        <div class="envelope-wrapper">
+            <div class="envelope">
+                <div class="card-preview">
+                    <p>Te tengo una sorpresa</p>
+                    <p style="font-size: 0.8rem; color: #666;">Haz click para descubrirla</p>
+                    <div class="heart-seal">❤️</div>
+                    <div style="margin-top: 15px; font-size: 0.8rem;">De: Dieguito <br> Para: Vania</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="header">
+            <p style="font-size: 0.8rem; letter-spacing: 3px;">EDICIÓN ESPECIAL</p>
+            <h1 class="newspaper-title">Valentine Edition</h1>
+            <div class="meta-info">
+                <span>14 de Febrero 2026</span>
+                <span>Eres el amor de mi vida</span>
+                <span>Juntos x Siempre</span>
+            </div>
+        </div>
+
+        <div class="hero-section">
+            <h2 class="big-question">WILL <span class="script-font">You be my</span> <br>VALENTINE?</h2>
+            
+            <p style="text-align: center; color: #666; font-size: 0.8rem;">DISTRIBUCIÓN EXCLUSIVA PARA MI PERSONA FAVORITA: <br> <strong>Vania</strong></p>
+
+            <div class="photo-frame">
+                <img src="foto-nosotros.jpg" alt="Diego y Vania" onerror="this.src='https://placehold.co/400x300/pink/white?text=Nuestra+Foto+Aqui'">
+                <p style="font-family: 'Sacramento', cursive; font-size: 1.5rem; margin: 5px 0;">Nuestra historia</p>
+            </div>
+
+            <p class="article-text">
+                Después de que el mundo hiciera su magia y nuestros caminos se cruzaran, quedó claro algo: quiero vivir este 14 de febrero contigo. 
+                Mi corazón —la única fuente confiable en estos temas— lo tiene claro desde hace tiempo. 
+                Quiero un San Valentín a tu lado, lleno de amor, risas sinceras y momentos que se queden grabados.
+            </p>
+        </div>
+
+        <div class="coupons">
+            <p style="text-align: center; font-weight: bold; color: var(--text-dark);">✂️ RECORTAR AQUÍ ✂️</p>
+            
+            <div class="coupon">
+                <div class="ticket-cut">CUPÓN 01</div>
+                <div>
+                    <strong>VALE POR:</strong><br>
+                    Una cita sorpresa organizada por mí.
+                </div>
+            </div>
+            
+            <div class="coupon">
+                <div class="ticket-cut">CUPÓN 02</div>
+                <div>
+                    <strong>VALE POR:</strong><br>
+                    Una ida al cine + tu snack favorito.
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 20px;">
+            <h2 style="color: var(--red-love); font-family: 'Playfair Display', serif;">5 Razones por las que eres perfecta</h2>
+        </div>
+        <div class="reasons-grid">
+            <div class="reason-box">1. Tienes la sonrisa más linda del universo.</div>
+            <div class="reason-box heart-center">❤️</div>
+            <div class="reason-box">2. Haces que mi corazón lata rápido cuando te pienso.</div>
+            <div class="reason-box heart-center">❤️</div>
+            <div class="reason-box">3. Contigo cualquier día se siente especial.</div>
+            <div class="reason-box">4. Eres mi persona favorita para compartir momentos.</div>
+            <div class="reason-box heart-center">❤️</div>
+            <div class="reason-box">5. No imagino a nadie más a mi lado este San Valentín.</div>
+        </div>
+
+        <div class="final-proposal">
+            <p>Después de analizar los hechos y la química innegable...</p>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--red-love);">¿Quieres ser mi San Valentín?</h2>
+            
+            <button class="btn btn-primary" onclick="sheSaidYes()">OBVIO, LO ESTABA ESPERANDO</button>
+            <button class="btn btn-secondary" onclick="sheSaidYes()">¡SÍ! POR SUPUESTOOO</button>
+        </div>
+
+        <div style="text-align: center; padding: 20px; font-size: 0.7rem; color: #aaa;">
+            Diseñado con amor por Diego
+        </div>
+    </div>
+
+    <script>
+        function openEnvelope() {
+            const envelopeScreen = document.getElementById('envelope-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Animación de salida del sobre
+            envelopeScreen.style.transform = 'translateY(-100vh)';
+            
+            // Mostrar contenido principal
+            setTimeout(() => {
+                mainContent.style.display = 'block';
+                window.scrollTo(0, 0); // Ir arriba
+            }, 500);
+        }
+
+        function sheSaidYes() {
+            // Lanza confeti
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff0000', '#ff69b4', '#ffffff']
+            });
+
+            // Mensaje de alerta (opcional)
+            setTimeout(() => {
+                alert("¡Sabía que dirías que sí! Te amo mi vida ❤️");
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
